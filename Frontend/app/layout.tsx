@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster"
-import NetworkSwitchButton from "../components/NetworkSwitchButton";
+import NetworkWarning from "../components/NetworkWarning";
+import LandingPageWarning from "../components/LandingPageWarning";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <NetworkSwitchButton />
+          <LandingPageWarning />
+          <NetworkWarning />
           {children}
         </Providers>
         <Toaster />
