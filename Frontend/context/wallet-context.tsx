@@ -30,17 +30,17 @@ const WalletContext = createContext<WalletContextType>({
 });
 
 const networks = {
-  edutestnet: {
-    chainId: `0x${Number(656476).toString(16)}`,
-    chainName: "edutestnet",
+  rootstockTestnet: {
+    chainId: `0x${Number(31).toString(16)}`,
+    chainName: "Rootstock Testnet",
     nativeCurrency: {
-      name: "ETH",
-      symbol: "ETH",
-      decimals: 18,
+      name: "tRBTC",
+      symbol: "tRBTC",
+      decimals: 18
     },
-    rpcUrls: ["https://rpc.open-campus-codex.gelato.digital"],
-    blockExplorerUrls: ['https://opencampus-codex.blockscout.com'],
-  },
+    rpcUrls: ["https://public-node.testnet.rsk.co"],
+    blockExplorerUrls: ['https://explorer.testnet.rootstock.io/']
+  }
 };
 
 export function WalletProvider({ children }: { children: ReactNode }) {
@@ -138,7 +138,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           setAddress(userAddress);
           setConnected(true);
           setChainId(network.chainId);
-          setIsCorrectNetwork(network.chainId === 656476);
+          setIsCorrectNetwork(network.chainId === 31);
 
           if (typeof window !== 'undefined') {
             localStorage.setItem("walletAddress", userAddress);
