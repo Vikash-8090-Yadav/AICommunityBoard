@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { ethers, providers } from 'ethers';
 import abi from "@/abi/CommunityBountyBoard.json";
 import { communityAddress } from '@/config';
+import { networks } from '@/config';
 
 declare global {
   interface Window {
@@ -236,7 +237,7 @@ export function BountyProvider({ children }: { children: React.ReactNode }) {
   // Fetch all bounties
   const fetchAllBounties = async () => {
     if (!provider) {
-      console.log('fetchAllBounties: No provider available'); // Debug log
+      console.log('fetchAllBounties: No provider available');
       return;
     }
 
@@ -244,31 +245,64 @@ export function BountyProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       
+      // Check if we're on the correct network
+      const network = await provider.getNetwork();
+      const currentChainId = `0x${network.chainId.toString(16)}`;
+      const targetChainId = networks.rootstockTestnet.chainId;
+
+      console.log('Network check:', {
+        currentChainId,
+        targetChainId,
+        networkName: network.name
+      });
+
+      if (currentChainId !== targetChainId) {
+        // Don't set error here, let the NetworkWarning component handle it
+        setBounties([]);
+        return;
+      }
+      
       const contract = getReadOnlyContract();
       
-      console.log('fetchAllBounties: Getting bounty count...'); // Debug log
+      console.log('fetchAllBounties: Getting bounty count...');
       const totalBounties = await contract.bountyCount();
-      console.log('fetchAllBounties: Total bounties:', totalBounties.toString());
-      
-      const fetchedBounties: Bounty[] = [];
-      
-      // Iterate through all bounties
-      for (let i = 0; i < totalBounties.toNumber(); i++) {
-        try {
-          console.log(`fetchAllBounties: Fetching bounty ${i}...`); // Debug log
-          const bounty = await getBountyDetails(i);
-          console.log('fetchAllBounties: Fetched bounty:', bounty);
-          fetchedBounties.push(bounty);
-        } catch (err: any) {
-          console.error(`fetchAllBounties: Error fetching bounty ${i}:`, err);
-        }
+      console.log('Total bounties:', totalBounties.toString());
+
+      const bountyPromises = [];
+      for (let i = 0; i < totalBounties; i++) {
+        bountyPromises.push(contract.bounties(i));
       }
 
-      console.log('fetchAllBounties: Setting bounties:', fetchedBounties);
-      setBounties(fetchedBounties);
+      const bountyResults = await Promise.all(bountyPromises);
+      console.log('Bounty results:', bountyResults);
+
+      const formattedBounties = bountyResults.map((bounty, index) => ({
+        id: index,
+        creator: bounty.creator,
+        title: bounty.title,
+        description: bounty.description,
+        proofRequirements: bounty.proofRequirements,
+        reward: bounty.reward,
+        rewardToken: bounty.rewardToken,
+        deadline: Number(bounty.deadline),
+        completed: bounty.completed,
+        winnerCount: Number(bounty.winnerCount),
+        submissionCount: Number(bounty.submissionCount),
+        submissions: [],
+        status: Number(bounty.status),
+        rewardAmount: ethers.utils.formatEther(bounty.reward)
+      }));
+
+      setBounties(formattedBounties);
     } catch (err: any) {
-      console.error("fetchAllBounties: Error:", err);
-      setError(err.message);
+      console.error("Error fetching bounties:", err);
+      if (err.code === -32603) {
+        // Don't set error for network issues, let NetworkWarning handle it
+        setBounties([]);
+      } else {
+        setError(err.message || 'Failed to fetch bounties');
+        setBounties([]);
+      }
     } finally {
       setLoading(false);
     }
