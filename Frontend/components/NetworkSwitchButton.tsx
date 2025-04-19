@@ -3,86 +3,86 @@
 import { useWallet } from "../context/wallet-context";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-
-interface NetworkConfig {
-  chainId: string;
-  chainName: string;
-  nativeCurrency: {
-    name: string;
-    symbol: string;
-    decimals: number;
-  };
-  rpcUrls: string[];
-  blockExplorerUrls: string[];
-}
+import { networks } from "@/config";
 
 interface EthereumError extends Error {
   code: number;
+  message: string;
 }
 
-const networks: Record<string, NetworkConfig> = {
-  edutestnet: {
-    chainId: `0x${Number(656476).toString(16)}`,
-    chainName: "edutestnet",
-    nativeCurrency: {
-      name: "ETH",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    rpcUrls: ["https://rpc.open-campus-codex.gelato.digital"],
-    blockExplorerUrls: ['https://opencampus-codex.blockscout.com'],
-  },
-};
-
 export default function NetworkSwitchButton() {
-  const { setIsCorrectNetwork } = useWallet();
+  const { connected, chainId } = useWallet();
+  const [showButton, setShowButton] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showButton, setShowButton] = useState(true);
+  const [currentNetwork, setCurrentNetwork] = useState<string>("");
 
   useEffect(() => {
     const checkNetwork = async () => {
+      console.log("Checking network...", { connected, chainId });
+      
       if (typeof window !== "undefined" && window.ethereum) {
         try {
-          // Use provider to get chain ID instead of direct request
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const network = await provider.getNetwork();
-          const currentChainId = `0x${network.chainId.toString(16)}`;
-          
-          console.log("Current chain ID:", currentChainId);
-          console.log("Target chain ID:", networks.edutestnet.chainId);
-          
-          if (currentChainId === networks.edutestnet.chainId) {
-            console.log("On correct network, hiding button");
-            setIsCorrectNetwork(true);
-            setShowButton(false);
+          // Check if wallet is connected by getting accounts
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          const isWalletConnected = accounts.length > 0;
+          console.log("Wallet connection status:", { isWalletConnected, accounts });
+
+          if (isWalletConnected) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const network = await provider.getNetwork();
+            const currentChainId = `0x${network.chainId.toString(16)}`;
+            
+            console.log("Network details:", {
+              currentChainId,
+              targetChainId: networks.rootstockTestnet.chainId,
+              networkName: network.name
+            });
+            
+            setCurrentNetwork(network.name || "Unknown Network");
+            const isWrongNetwork = currentChainId !== networks.rootstockTestnet.chainId;
+            console.log("Is wrong network?", isWrongNetwork);
+            setShowButton(isWrongNetwork);
           } else {
-            console.log("On wrong network, showing button");
-            setIsCorrectNetwork(false);
-            setShowButton(true);
+            console.log("Wallet not connected");
+            setShowButton(false);
           }
         } catch (error) {
           console.error("Error checking network:", error);
-          setIsCorrectNetwork(false);
-          setShowButton(true);
+          setShowButton(false);
         }
+      } else {
+        console.log("MetaMask not installed");
+        setShowButton(false);
       }
     };
 
+    // Check immediately
     checkNetwork();
+
+    // Set up interval to check every 5 seconds
+    const interval = setInterval(checkNetwork, 5000);
 
     // Add event listener for network changes
     if (typeof window !== "undefined" && window.ethereum) {
-      window.ethereum.on('chainChanged', () => {
+      window.ethereum.on('chainChanged', (newChainId: string) => {
+        console.log("Chain changed event:", newChainId);
+        checkNetwork();
+      });
+
+      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+        console.log("Accounts changed:", accounts);
         checkNetwork();
       });
     }
 
     return () => {
+      clearInterval(interval);
       if (typeof window !== "undefined" && window.ethereum) {
         window.ethereum.removeListener('chainChanged', checkNetwork);
+        window.ethereum.removeListener('accountsChanged', checkNetwork);
       }
     };
-  }, [setIsCorrectNetwork]);
+  }, [connected, chainId]);
 
   const handleSwitchNetwork = async () => {
     setLoading(true);
@@ -92,52 +92,33 @@ export default function NetworkSwitchButton() {
         return;
       }
 
-      // Get current chain ID
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
       console.log("Current chain ID:", currentChainId);
 
-      // If already on the correct network, return
-      if (currentChainId === networks.edutestnet.chainId) {
-        console.log("Already on the correct network");
-        setIsCorrectNetwork(true);
+      if (currentChainId === networks.rootstockTestnet.chainId) {
         setShowButton(false);
         return;
       }
 
       try {
-        // Try to switch to the network
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: networks.edutestnet.chainId }],
+          params: [{ chainId: networks.rootstockTestnet.chainId }],
         });
-        console.log("Successfully switched networks");
-        setIsCorrectNetwork(true);
-        setShowButton(false);
       } catch (switchError: unknown) {
-        // If the network hasn't been added to MetaMask
-        if ((switchError as EthereumError).code === 4902) {
+        const error = switchError as EthereumError;
+        if (error.code === 4902) {
           try {
-            // Add the network
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [networks.edutestnet],
+              params: [networks.rootstockTestnet],
             });
-            console.log("Network added successfully");
-            
-            // Try switching again after adding
-            await window.ethereum.request({
-              method: 'wallet_switchEthereumChain',
-              params: [{ chainId: networks.edutestnet.chainId }],
-            });
-            console.log("Successfully switched after adding network");
-            setIsCorrectNetwork(true);
-            setShowButton(false);
           } catch (addError) {
             console.error("Add network error:", addError);
-            throw new Error('Failed to add edutestnet to your wallet');
+            throw new Error('Failed to add Rootstock Testnet to your wallet');
           }
         } else {
-          throw new Error('Failed to switch to edutestnet network');
+          throw new Error('Failed to switch to Rootstock Testnet network');
         }
       }
     } catch (error) {
@@ -148,24 +129,24 @@ export default function NetworkSwitchButton() {
     }
   };
 
+  // Log button visibility
+  useEffect(() => {
+    console.log("Button visibility:", { showButton, connected, currentNetwork });
+  }, [showButton, connected, currentNetwork]);
+
   if (!showButton) {
     return null;
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      <div className="bg-red-500 text-white p-4 rounded-lg shadow-lg">
-        <p className="mb-2">You are on the wrong network!</p>
-        <button
-          onClick={handleSwitchNetwork}
-          disabled={loading}
-          className={`bg-white text-red-500 px-4 py-2 rounded hover:bg-gray-100 transition-colors ${
-            loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          {loading ? 'Switching...' : 'Switch to edutestnet'}
-        </button>
-      </div>
-    </div>
+    <button
+      onClick={handleSwitchNetwork}
+      disabled={loading}
+      className={`bg-red-600 text-white px-4 py-2 rounded font-semibold hover:bg-red-700 transition-colors ${
+        loading ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+    >
+      {loading ? 'Switching...' : 'Switch to Rootstock Testnet'}
+    </button>
   );
 }
