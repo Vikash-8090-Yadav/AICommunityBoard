@@ -211,9 +211,9 @@ export default function CreateBountyForm() {
             <Input
               id="reward"
               type="number"
-              step="0.001"
-              min="0"
-              placeholder="0.00"
+              step="0.0001"
+              min="0.0001"
+              placeholder="0.0001"
               value={reward}
               onChange={(e) => setReward(e.target.value)}
               required

@@ -194,6 +194,20 @@ export default function SubmitProofForm({ bountyId, bountyTitle, onSuccess }: Su
         nonce: nonce
       }
 
+      // Show transaction details before sending
+      toast({
+        title: "Transaction Request",
+        description: (
+          <div className="space-y-2">
+            <p>You are about to submit a proof for bounty: {bountyTitle}</p>
+            <p className="text-sm text-muted-foreground">Contract: {communityAddress}</p>
+            <p className="text-sm text-muted-foreground">Network: Rootstock Testnet</p>
+          </div>
+        ),
+        variant: "default",
+        duration: 5000
+      })
+
       const txResponse = await signer.sendTransaction(tx)
 
       setTransactionStage("pending")

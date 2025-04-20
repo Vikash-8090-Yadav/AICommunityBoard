@@ -15,6 +15,8 @@ interface WalletContextType {
   isCorrectNetwork: boolean;
   setIsCorrectNetwork: (value: boolean) => void;
   loading: boolean;
+  showDisconnectWarning: boolean;
+  setShowDisconnectWarning: (value: boolean) => void;
 }
 
 const WalletContext = createContext<WalletContextType>({
@@ -28,6 +30,8 @@ const WalletContext = createContext<WalletContextType>({
   isCorrectNetwork: false,
   setIsCorrectNetwork: () => {},
   loading: false,
+  showDisconnectWarning: false,
+  setShowDisconnectWarning: () => {},
 });
 
 export function WalletProvider({ children }: { children: ReactNode }) {
@@ -37,6 +41,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [connected, setConnected] = useState(false);
   const [chainId, setChainId] = useState<number | null>(null);
   const [isCorrectNetwork, setIsCorrectNetwork] = useState(false);
+  const [showDisconnectWarning, setShowDisconnectWarning] = useState(false);
 
   const refreshPage = () => {
     try {
@@ -172,8 +177,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem("walletAddress");
     }
-    // Refresh page after disconnection
-    refreshPage();
+    // Show the disconnect warning modal
+    setShowDisconnectWarning(true);
   };
 
   return (
@@ -189,9 +194,30 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         isCorrectNetwork,
         setIsCorrectNetwork,
         loading: false,
+        showDisconnectWarning,
+        setShowDisconnectWarning,
       }}
     >
       {children}
+      {showDisconnectWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-gray-900 p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 border border-gray-700">
+            <div className="text-center">
+              <div className="text-5xl mb-6">🔌</div>
+              <h2 className="text-2xl font-bold mb-4 text-white">Wallet Disconnected</h2>
+              <p className="text-gray-300 mb-8 text-lg">
+                Your wallet has been disconnected. You can connect again when you're ready.
+              </p>
+              <button
+                onClick={() => setShowDisconnectWarning(false)}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </WalletContext.Provider>
   );
 }
