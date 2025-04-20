@@ -30,20 +30,6 @@ const WalletContext = createContext<WalletContextType>({
   loading: false,
 });
 
-const networks = {
-  rootstockTestnet: {
-    chainId: `0x${Number(31).toString(16)}`,
-    chainName: "Rootstock Testnet",
-    nativeCurrency: {
-      name: "tRBTC",
-      symbol: "tRBTC",
-      decimals: 18
-    },
-    rpcUrls: ["https://public-node.testnet.rsk.co"],
-    blockExplorerUrls: ['https://explorer.testnet.rootstock.io/']
-  }
-};
-
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
@@ -74,6 +60,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             setAddress(userAddress);
             setConnected(true);
             setChainId(network.chainId);
+            setIsCorrectNetwork(network.chainId === 31); // Rootstock Testnet chain ID
           }
         } catch (error) {
           console.error("Failed to check wallet connection:", error);
@@ -87,6 +74,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         console.log("Network changed to chainId:", chainId);
         const newChainId = parseInt(chainId, 16);
         setChainId(newChainId);
+        setIsCorrectNetwork(newChainId === 31); // Rootstock Testnet chain ID
         
         // Update provider and signer
         const newProvider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -139,7 +127,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           setAddress(userAddress);
           setConnected(true);
           setChainId(network.chainId);
-          setIsCorrectNetwork(network.chainId === 31);
+          setIsCorrectNetwork(network.chainId === 31); // Rootstock Testnet chain ID
 
           if (typeof window !== 'undefined') {
             localStorage.setItem("walletAddress", userAddress);
