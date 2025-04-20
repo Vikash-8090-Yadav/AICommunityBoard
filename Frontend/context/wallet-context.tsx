@@ -90,6 +90,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           setAddress("");
           setConnected(false);
         }
+
+        // Refresh page when network changes
+        window.location.reload();
       });
 
       // Listen for account changes
@@ -102,6 +105,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             localStorage.setItem("walletAddress", accounts[0]);
           }
         }
+        // Refresh page when account changes
+        window.location.reload();
       });
 
       return () => {
@@ -132,6 +137,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           if (typeof window !== 'undefined') {
             localStorage.setItem("walletAddress", userAddress);
           }
+
+          // Refresh page after successful connection
+          window.location.reload();
         }
       }
     } catch (error: any) {
@@ -149,6 +157,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem("walletAddress");
     }
+    // Refresh page after disconnection
+    window.location.reload();
   };
 
   return (
