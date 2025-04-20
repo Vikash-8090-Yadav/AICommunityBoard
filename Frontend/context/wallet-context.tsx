@@ -38,6 +38,21 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [chainId, setChainId] = useState<number | null>(null);
   const [isCorrectNetwork, setIsCorrectNetwork] = useState(false);
 
+  const refreshPage = () => {
+    try {
+      // Try different methods to refresh the page
+      if (window.location && window.location.reload) {
+        window.location.reload();
+      } else if (window.location && window.location.href) {
+        window.location.href = window.location.href;
+      } else if (window.location && window.location.replace) {
+        window.location.replace(window.location.href);
+      }
+    } catch (error) {
+      console.error("Failed to refresh page:", error);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).ethereum) {
       const ethersProvider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -92,7 +107,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }
 
         // Refresh page when network changes
-        window.location.reload();
+        refreshPage();
       });
 
       // Listen for account changes
@@ -106,7 +121,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           }
         }
         // Refresh page when account changes
-        window.location.reload();
+        refreshPage();
       });
 
       return () => {
@@ -139,7 +154,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           }
 
           // Refresh page after successful connection
-          window.location.reload();
+          refreshPage();
         }
       }
     } catch (error: any) {
@@ -158,7 +173,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem("walletAddress");
     }
     // Refresh page after disconnection
-    window.location.reload();
+    refreshPage();
   };
 
   return (
