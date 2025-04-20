@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { ethers } from "ethers";
+import { networks } from "@/config";
 
 interface WalletContextType {
   provider: ethers.providers.Web3Provider | null;
