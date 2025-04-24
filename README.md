@@ -39,10 +39,9 @@ graph TD
 
 # Smart Contract: 
 
-https://edu-chain-testnet.blockscout.com/address/0x2C8e10de89319BEdD4535fe668B659e6e1dF5593
+https://explorer.testnet.rootstock.io/search/0x2C8e10de89319BEdD4535fe668B659e6e1dF5593
 
-
-<img width="927" alt="image" src="https://github.com/user-attachments/assets/33749aeb-c8ba-49c4-be7d-0dd91b794f40" />
+<img width="1109" alt="Screenshot 2025-04-25 000012" src="https://github.com/user-attachments/assets/cbc3de80-9aae-484c-8f2d-02f6d14b77a3" />
 
 
 ### Screenshots
