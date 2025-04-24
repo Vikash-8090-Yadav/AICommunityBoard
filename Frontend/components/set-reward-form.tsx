@@ -106,7 +106,7 @@ export default function SetRewardForm({
         if (err.message.includes("4001")) {
           setTransactionError("Transaction was rejected in your wallet")
         } else if (err.message.includes("insufficient funds")) {
-          setTransactionError("You don't have enough ETH to set this reward")
+          setTransactionError("You don't have enough BTC to set this reward")
         } else if (err.message.includes("Cannot set reward before deadline")) {
           setTransactionError("Cannot set reward before deadline")
         } else if (err.message.includes("Can only set reward for approved submissions")) {
@@ -143,7 +143,7 @@ export default function SetRewardForm({
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="reward">Reward Amount (ETH)</Label>
+            <Label htmlFor="reward">Reward Amount (BTC)</Label>
             <Input
               id="reward"
               type="number"
@@ -157,7 +157,7 @@ export default function SetRewardForm({
               disabled={!isApproved}
             />
             <p className="text-sm text-muted-foreground">
-              Maximum reward: {bountyReward} ETH
+              Maximum reward: {bountyReward} BTC
             </p>
           </div>
 

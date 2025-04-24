@@ -132,7 +132,7 @@ export default function SubmissionDetails({
           <div>
             <h3 className="font-semibold">Reward Set</h3>
             <p className="text-sm text-muted-foreground">
-              {ethers.utils.formatEther(submission.rewardAmount)} ETH
+              {ethers.utils.formatEther(submission.rewardAmount)} BTC
             </p>
           </div>
         )}
