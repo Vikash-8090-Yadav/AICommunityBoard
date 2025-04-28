@@ -131,7 +131,7 @@ export default function CreateBountyForm() {
         if (err.message.includes("4001")) {
           setTransactionError("Transaction was rejected in your wallet")
         } else if (err.message.includes("insufficient funds")) {
-          setTransactionError("You don't have enough BTC to create this bounty")
+          setTransactionError("You don't have enough TRBTC to create this bounty")
         } else {
           setTransactionError(err.message || "Failed to create bounty. Please try again.")
         }
@@ -207,7 +207,7 @@ export default function CreateBountyForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="reward">Reward Amount (BTC)</Label>
+            <Label htmlFor="reward">Reward Amount (TRBTC)</Label>
             <Input
               id="reward"
               type="number"
