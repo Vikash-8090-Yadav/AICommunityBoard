@@ -5,6 +5,10 @@
 
 A decentralized platform for creating, managing, and completing bounties with AI-powered features and community-driven verification.
 
+
+## Youtube Video: https://youtu.be/Q5bJwD7jYpM?si=dHk5oEQieqqAaOcp
+
+
 ## 📸 Visual Documentation
 
 ### Project Flow
