@@ -138,7 +138,7 @@ https://explorer.testnet.rootstock.io/itx/06099ad001002466134d1585509ae515
 1. Clone the repository:
 ```bash
 git clone https://github.com/Vikash-8090-Yadav/AICommunityBoard.git
-cd CommunityBoard
+cd AICommunityBoard
 ```
 
 2. Install dependencies:
