@@ -231,7 +231,7 @@ export default function UserProfile() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Total Earned</p>
-                      <p className="text-xl font-bold">{stats.totalEarned.toFixed(3)} BTC</p>
+                      <p className="text-xl font-bold">{stats.totalEarned.toFixed(3)} TRBTC</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -273,7 +273,7 @@ export default function UserProfile() {
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center">
                         <Award className="mr-2 h-4 w-4" />
-                        <span>{bounty.reward ? ethers.utils.formatEther(bounty.reward) : '0'} BTC</span>
+                        <span>{bounty.reward ? ethers.utils.formatEther(bounty.reward) : '0'} TRBTC</span>
                       </div>
                       <div className="flex items-center">
                         <Calendar className="mr-2 h-4 w-4" />
