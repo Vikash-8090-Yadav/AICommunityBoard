@@ -133,7 +133,7 @@ export default function BountyList() {
                 <div className="space-y-2">
                   <div className="flex items-center text-sm">
                     <Award className="mr-2 h-4 w-4" />
-                    <span>{bounty.reward ? `${formatEther(bounty.reward)} BTC` : 'Reward not specified'}</span>
+                    <span>{bounty.reward ? `${formatEther(bounty.reward)} TRBTC` : 'Reward not specified'}</span>
                   </div>
                   <div className="flex items-center text-sm">
                     <Calendar className="mr-2 h-4 w-4" />
