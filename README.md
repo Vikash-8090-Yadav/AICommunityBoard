@@ -1,4 +1,4 @@
-# Community Board - Decentralized Bounty Platform
+# Community Board - Decentralized Bounty Platform (TRY ON CHROME)
 
 <img width="1108" alt="Screenshot 2025-04-29 030519" src="https://github.com/user-attachments/assets/d863218a-b518-4fd1-ae39-c8f917c0632b" />
 
