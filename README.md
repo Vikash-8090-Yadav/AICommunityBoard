@@ -6,6 +6,18 @@
 A decentralized platform for creating, managing, and completing bounties with AI-powered features and community-driven verification.
 
 
+The AI Community Board aims to create a decentralized, transparent, and collaborative platform where individuals and organizations can post bounties, submit proofs of work, and vote on contributions. By leveraging blockchain technology, the platform ensures fairness, immutability, and trust in rewarding contributors for their efforts.
+
+## Our vision is to empower communities to:
+
+Collaborate Effectively: Provide a space where users can work together to solve problems and achieve shared goals.
+
+Reward Contributions Fairly: Use smart contracts to automate and ensure fair distribution of rewards based on community votes.
+
+Foster Transparency: Maintain an open and auditable system where all actions, votes, and rewards are recorded on the blockchain.
+
+Encourage Innovation: Motivate contributors to bring creative solutions to challenges by offering decentralized incentives.
+
 ## Youtube Video: https://youtu.be/Q5bJwD7jYpM?si=dHk5oEQieqqAaOcp
 
 
