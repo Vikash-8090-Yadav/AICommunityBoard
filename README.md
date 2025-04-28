@@ -1,6 +1,25 @@
-# Community Board - Decentralized Bounty Platform
+# Community Board - Decentralized Bounty Platform (TRY ON CHROME)
+
+<img width="1108" alt="Screenshot 2025-04-29 030519" src="https://github.com/user-attachments/assets/d863218a-b518-4fd1-ae39-c8f917c0632b" />
+
 
 A decentralized platform for creating, managing, and completing bounties with AI-powered features and community-driven verification.
+
+
+The AI Community Board aims to create a decentralized, transparent, and collaborative platform where individuals and organizations can post bounties, submit proofs of work, and vote on contributions. By leveraging blockchain technology, the platform ensures fairness, immutability, and trust in rewarding contributors for their efforts.
+
+## Our vision is to empower communities to:
+
+Collaborate Effectively: Provide a space where users can work together to solve problems and achieve shared goals.
+
+Reward Contributions Fairly: Use smart contracts to automate and ensure fair distribution of rewards based on community votes.
+
+Foster Transparency: Maintain an open and auditable system where all actions, votes, and rewards are recorded on the blockchain.
+
+Encourage Innovation: Motivate contributors to bring creative solutions to challenges by offering decentralized incentives.
+
+## Youtube Video: https://youtu.be/Q5bJwD7jYpM?si=dHk5oEQieqqAaOcp
+
 
 ## 📸 Visual Documentation
 
@@ -47,19 +66,24 @@ https://explorer.testnet.rootstock.io/search/0x2C8e10de89319BEdD4535fe668B659e6e
 ### Screenshots
 
 #### Bounty Creation
-<img width="1097" alt="Screenshot 2025-04-08 181452" src="https://github.com/user-attachments/assets/0c76daf5-a062-4b49-b820-b2647b8ca1e7" />
+
+<img width="1091" alt="Screenshot 2025-04-29 030609" src="https://github.com/user-attachments/assets/d8478b33-c987-4594-a4eb-0895febf6f37" />
+
 
 *Create new bounties with AI-powered suggestions*
 
 #### Submission Verification
 
-<img width="1077" alt="Screenshot 2025-04-08 181545" src="https://github.com/user-attachments/assets/d2096bb0-ca36-403f-bdc3-c7e4010040fc" />
+<img width="1115" alt="Screenshot 2025-04-29 030644" src="https://github.com/user-attachments/assets/332b8b74-00f0-418e-92a7-498a22d29ed9" />
 
 
 *Community-driven verification with quality checks*
 
 #### Reward Distribution
 
+https://explorer.testnet.rootstock.io/itx/06099ad001002466134d1585509ae515
+
+<img width="1120" alt="Screenshot 2025-04-29 030833" src="https://github.com/user-attachments/assets/8a420d25-8b0f-4cdb-9537-791c26844948" />
 
 *Smart reward distribution with AI analysis*
 
@@ -99,27 +123,7 @@ https://explorer.testnet.rootstock.io/search/0x2C8e10de89319BEdD4535fe668B659e6e
 - OpenZeppelin
 - Hardhat
 
-## 📋 Project Structure
 
-```
-CommunityBoard/
-├── Frontend/
-│   ├── components/
-│   │   ├── create-bounty-form.tsx
-│   │   ├── verification-panel.tsx
-│   │   ├── quality-check-panel.tsx
-│   │   ├── reward-distribution-panel.tsx
-│   │   └── bounty-ai-suggestions.tsx
-│   ├── pages/
-│   │   └── api/
-│   │       ├── analyze-bounty.ts
-│   │       └── analyze-rewards.ts
-│   └── types/
-│       └── bounty.ts
-└── SmartContract/
-    └── contracts/
-        └── CommuntyBoard.sol
-```
 
 ## 🚀 Getting Started
 
@@ -133,8 +137,8 @@ CommunityBoard/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Vikash-8090-Yadav/CommunityBoard.git
-cd CommunityBoard
+git clone https://github.com/Vikash-8090-Yadav/AICommunityBoard.git
+cd AICommunityBoard
 ```
 
 2. Install dependencies:
@@ -182,17 +186,3 @@ npm run dev
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-## 👥 Authors
-
-- @Vikash-8090-Yadav
-
-## 🙏 Acknowledgments
-
-- OpenZeppelin for smart contract templates
-- OpenAI for AI capabilities
-- The Ethereum community for support and resources
