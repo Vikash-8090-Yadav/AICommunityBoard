@@ -20,6 +20,9 @@ Encourage Innovation: Motivate contributors to bring creative solutions to chall
 
 ## Youtube Video: https://youtu.be/Q5bJwD7jYpM?si=dHk5oEQieqqAaOcp
 
+##  AI Process Documentation: https://docs.google.com/document/d/1IcaBWZIYlrr_bYIxSw8z2jy5Bb1ijc3JhKnW9-nroX8/edit?usp=sharing 
+
+
 
 ## 📸 Visual Documentation
 
