@@ -115,7 +115,7 @@ export default function BountyAISuggestions({
             </div>
             <div>
               <h3 className="font-medium mb-2">Suggested Reward</h3>
-              <p className="text-sm text-muted-foreground">{suggestions.suggestedReward.amount} BTC</p>
+              <p className="text-sm text-muted-foreground">{suggestions.suggestedReward.amount} TRBTC</p>
             </div>
             <div>
               <h3 className="font-medium mb-2">Suggested Deadline</h3>
