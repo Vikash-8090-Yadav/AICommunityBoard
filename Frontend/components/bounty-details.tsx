@@ -332,7 +332,7 @@ export default function BountyDetails({ id }: BountyDetailsProps) {
                     </div>
                     <div className="ml-4">
                       <p className="text-sm text-muted-foreground">Reward</p>
-                      <p className="font-medium text-lg">{bounty.rewardAmount} BTC</p>
+                      <p className="font-medium text-lg">{bounty.rewardAmount} TRBTC</p>
                     </div>
                   </div>
 
@@ -528,7 +528,7 @@ export default function BountyDetails({ id }: BountyDetailsProps) {
                                 <div className="space-y-2">
                                   <Input
                                     type="number"
-                                    placeholder="Enter reward amount in BTC"
+                                    placeholder="Enter reward amount in TRBTC"
                                     value={rewardAmount}
                                     onChange={(e) => setRewardAmount(e.target.value)}
                                   />
