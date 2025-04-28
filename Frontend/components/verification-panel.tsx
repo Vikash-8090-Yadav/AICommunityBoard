@@ -98,14 +98,14 @@ export default function VerificationPanel({
 
   const fetchSubmissions = useCallback(async () => {
     try {
-      setLoading(true)
-      const rpcProvider = new ethers.providers.JsonRpcProvider('https://rpc.open-campus-codex.gelato.digital')
-      const contract = new ethers.Contract(communityAddress, abi.abi, rpcProvider)
+      setLoading(true);
+      const rpcProvider = new ethers.providers.JsonRpcProvider('https://public-node.testnet.rsk.co');
+      const contract = new ethers.Contract(communityAddress, abi.abi, rpcProvider);
 
-      const submissionCount = await contract.getSubmissionCount(bountyId)
-      const submissionPromises = Array.from({ length: submissionCount }, (_, i) => 
+      const submissionCount = await contract.getSubmissionCount(bountyId);
+      const submissionPromises = Array.from({ length: submissionCount }, (_, i) =>
         contract.getSubmission(bountyId, i).catch(() => null)
-      )
+      );
 
       const submissionsData = (await Promise.all(submissionPromises))
         .filter((data): data is ethers.utils.Result => data !== null)
@@ -118,91 +118,91 @@ export default function VerificationPanel({
             approvalCount,
             rejectCount,
             isWinner,
-            rewardAmount,
+            rewardAmount, // This is in Wei
             txHash,
             payoutTxHash
-          ] = data
+          ] = data;
 
           return {
             id: i.toString(),
             submitter,
             proofCID: ipfsProofHash,
             status: approved ? "approved" : rejectCount > 0 ? "rejected" : "pending" as "approved" | "pending" | "rejected",
-            rewardAmount: rewardAmount.toString(),
+            rewardAmount: ethers.utils.formatEther(rewardAmount.toString()), // Convert reward to ETH
             timestamp: Number(timestamp),
-            approvalCount: Number(approvalCount),
-            rejectCount: Number(rejectCount),
+            approvalCount: Number(approvalCount), // Ensure correct count
+            rejectCount: Number(rejectCount), // Ensure correct count
             isWinner,
             txHash,
             payoutTxHash
-          }
-        })
+          };
+        });
 
-      setSubmissions(submissionsData)
+      setSubmissions(submissionsData);
     } catch (err) {
-      console.error("Error fetching submissions:", err)
+      console.error("Error fetching submissions:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [bountyId])
+  }, [bountyId]);
 
   useEffect(() => {
     fetchSubmissions()
   }, [fetchSubmissions])
 
   const handleVote = async (submissionIndex: number, approve: boolean) => {
-    if (!connected || !provider) {
-      console.error("Please connect your wallet first")
-      return
+    if (!provider) {
+      console.error("Please connect your wallet first");
+      return;
     }
 
     if (submissionIndex < 0 || submissionIndex >= submissions.length) {
-      console.error("Invalid submission index")
-      return
+      console.error("Invalid submission index");
+      return;
     }
 
     if (submissions[submissionIndex].submitter.toLowerCase() === address?.toLowerCase()) {
-      console.error("You cannot vote on your own submission")
-      return
+      console.error("You cannot vote on your own submission");
+      return;
     }
 
     if (hasVoted(submissionIndex)) {
-      console.error("You have already voted on this submission")
-      return
+      console.error("You have already voted on this submission");
+      return;
     }
 
     if (!isActive) {
-      console.error("Voting period has ended")
-      return
+      console.error("Voting period has ended");
+      return;
     }
 
     try {
-      setVoting(true)
-      setTransactionStage("submitted")
-      setTransactionError(null)
+      setVoting(true);
+      setTransactionStage("submitted");
+      setTransactionError(null);
 
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(communityAddress, abi.abi, signer)
-      const tx = await contract.voteOnSubmission(bountyId, submissionIndex, approve)
-      setTransactionStage("pending")
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(communityAddress, abi.abi, signer);
+      const tx = await contract.voteOnSubmission(bountyId, submissionIndex, approve);
+      setTransactionStage("pending");
 
-      await tx.wait()
-      console.log("Vote transaction confirmed")
-      setTransactionStage("confirmed")
+      await tx.wait();
+      console.log("Vote transaction confirmed");
+      setTransactionStage("confirmed");
 
       // Update voted submissions state
-      setVotedSubmissions(prev => new Set([...prev, submissions[submissionIndex].id]))
+      setVotedSubmissions((prev) => new Set([...prev, submissions[submissionIndex].id]));
 
       // Reload the page after successful vote
-      window.location.reload()
+      window.location.reload();
     } catch (error) {
-      console.error("Error voting:", error)
-      setTransactionStage("error")
-      setTransactionError(error instanceof Error ? error.message : "Failed to vote. Please try again.")
+      console.error("Error voting:", error);
+      setTransactionStage("error");
+      setTransactionError(error instanceof Error ? error.message : "Failed to vote. Please try again.");
     } finally {
-      setVoting(false)
+      setVoting(false);
     }
-  }
+  };
 
   const handleRewardInputChange = (submissionId: string, value: string) => {
     setRewardInputs(prev => ({
@@ -213,66 +213,70 @@ export default function VerificationPanel({
 
   const handleSetReward = async (submissionIndex: number) => {
     if (!connected || !provider) {
-      console.error("Please connect your wallet first")
-      return
+      console.error("Please connect your wallet first");
+      return;
     }
 
-    const submission = submissions[submissionIndex]
-    const rewardAmount = rewardInputs[submission.id] || submission.rewardAmount
+    const submission = submissions[submissionIndex];
+    const rewardAmount = rewardInputs[submission.id] || submission.rewardAmount;
 
+    // Ensure the rewardAmount is a valid numeric string
     if (!rewardAmount || isNaN(Number(rewardAmount)) || Number(rewardAmount) <= 0) {
-      console.error("Please enter a valid reward amount")
-      return
+      console.error("Please enter a valid reward amount");
+      return;
     }
 
     if (submission.status !== "approved") {
-      console.error("Can only set reward for approved submissions")
-      return
+      console.error("Can only set reward for approved submissions");
+      return;
     }
 
     if (isActive) {
-      console.error("Cannot set reward before deadline")
-      return
+      console.error("Cannot set reward before deadline");
+      return;
     }
 
     try {
-      setSettingReward(true)
-      setTransactionStage("submitted")
-      setTransactionError(null)
+      setSettingReward(true);
+      setTransactionStage("submitted");
+      setTransactionError(null);
 
-      const rewardWei = ethers.utils.parseEther(rewardAmount)
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(communityAddress, abi.abi, signer)
+      // Convert rewardAmount to Wei
+      const rewardWei = ethers.utils.parseEther(rewardAmount.toString());
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(communityAddress, abi.abi, signer);
 
       const tx = await contract.setSubmissionReward(
         bountyId,
         submissionIndex,
         rewardWei,
         { value: rewardWei }
-      )
-      setTransactionStage("pending")
+      );
+      setTransactionStage("pending");
 
-      await tx.wait()
-      console.log("Reward sent successfully")
-      setTransactionStage("confirmed")
+      await tx.wait();
+      console.log("Reward sent successfully");
+      setTransactionStage("confirmed");
 
       // Clear the input after successful reward set
-      setRewardInputs(prev => {
-        const newInputs = { ...prev }
-        delete newInputs[submission.id]
-        return newInputs
-      })
+      setRewardInputs((prev) => {
+        const newInputs = { ...prev };
+        delete newInputs[submission.id];
+        return newInputs;
+      });
 
       // Reload the page after successful reward set
-      window.location.reload()
+      window.location.reload();
     } catch (error) {
-      console.error("Error sending reward:", error)
-      setTransactionStage("error")
-      setTransactionError(error instanceof Error ? error.message : "Failed to send reward. Please try again.")
+      console.error("Error sending reward:", error);
+      setTransactionStage("error");
+      setTransactionError(
+        error instanceof Error ? error.message : "Failed to send reward. Please try again."
+      );
     } finally {
-      setSettingReward(false)
+      setSettingReward(false);
     }
-  }
+  };
 
   const handleComplete = async () => {
     if (!connected || !provider) {
@@ -643,7 +647,7 @@ export default function VerificationPanel({
                           <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
                             <Trophy className="h-3.5 w-3.5" />
                             <span className="font-medium">
-                              {ethers.utils.formatEther(submission.rewardAmount)} ETH
+                              {rewardAmount} TRBTC
                             </span>
                           </div>
                         ) : (
